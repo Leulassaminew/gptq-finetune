@@ -30,7 +30,9 @@ model_id = "TheBloke/Llama-2-13B-chat-GPTQ"
 quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
 model = AutoModelForCausalLM.from_pretrained(
                               model_id,
-                              device_map="auto"
+                              device_map="auto",
+				trust_remote_code=False,
+				revision="main"
                           )
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model.config.use_cache = False
