@@ -13,6 +13,7 @@ from transformers import AutoTokenizer
 
 dataset = load_dataset("Leul78/fina")
 dataset = dataset.shuffle()
+
 output_dir = "output_lora"
 
 def format_instruction(sample):
@@ -73,7 +74,7 @@ args = TrainingArguments(
     gradient_accumulation_steps=2,
     gradient_checkpointing=True,
     optim="adafactor",
-    logging_steps=10,
+    logging_steps=25,
     save_strategy="epoch",
     weight_decay=0.002,
     learning_rate=0.00005,
