@@ -31,8 +31,13 @@ quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
 model = AutoModelForCausalLM.from_pretrained(
                               model_id,
                               device_map="auto",
+<<<<<<< HEAD
 							  cache_dir="./models",
 							  revision=
+=======
+				trust_remote_code=False,
+				revision="main"
+>>>>>>> 3f1f17cbf318b82ae14d02056e131bc8f43cc910
                           )
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model.config.use_cache = False
