@@ -11,7 +11,8 @@ import torch
 from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer
 
-dataset = load_dataset("Leul78/final")
+dataset = load_dataset("Leul78/fina")
+dataset = dataset.shuffle()
 output_dir = "output_lora"
 
 def format_instruction(sample):
@@ -19,10 +20,10 @@ def format_instruction(sample):
 "Categorize the input text based on the sales technique used in it from one of these categories only and offer no explanation:\n\nBUILDING RAPPORT\nNEEDS ASSESMENT\nCREATING URGENCY\nSOCIAL PROOF\nOVERCOMING OBJECTION\nCROSS SELLING OR UPSELLING\nVALUE BASED SELLING\nNONE\n\n"
 
 ### Input:
-{sample['sentence']}
+{sample['text']}
 
 ### Response:
-{sample['label']}
+{sample['category']}
 """
 
 model_id = "TheBloke/Llama-2-13B-chat-GPTQ"
@@ -31,15 +32,11 @@ quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
 model = AutoModelForCausalLM.from_pretrained(
                               model_id,
                               device_map="auto",
-<<<<<<< HEAD
-							  cache_dir="./models",
-							  revision=
-=======
+			  cache_dir="./models",
+			revision="gptq-4bit-128g-actorder_True",
 				trust_remote_code=False,
-				revision="main"
->>>>>>> 3f1f17cbf318b82ae14d02056e131bc8f43cc910
                           )
-tokenizer = AutoTokenizer.from_pretrained(model_id)
+tokenizer = AutoTokenizer.from_pretrained(model_id,cache_dir="./models")
 model.config.use_cache = False
 # https://github.com/huggingface/transformers/pull/24906
 #disable tensor parallelism
