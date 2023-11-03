@@ -80,7 +80,7 @@ args = TrainingArguments(
     learning_rate=0.00005,
     max_grad_norm=0.3,
     warmup_ratio=0.03,
-    lr_scheduler_type="constant",
+save_Steps=200,
     disable_tqdm=True # disable tqdm since with packing values are in correct
 )
 
