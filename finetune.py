@@ -17,7 +17,7 @@ dataset = dataset.shuffle()
 output_dir = "output_lora"
 
 def format_instruction(sample):
-	return f""" Below is an instruction give a response that appropraitely fulfils it./n
+	return f"""
  ### Instruction:
 Categorize the input text based on the sales technique used in it from one of these categories only and offer no explanation:\n\nBUILDING RAPPORT\nNEEDS ASSESMENT\nCREATING URGENCY\nSOCIAL PROOF\nOVERCOMING OBJECTION\nCROSS SELLING OR UPSELLING\nVALUE BASED SELLING\nNONE\n\n
 
@@ -30,7 +30,7 @@ Categorize the input text based on the sales technique used in it from one of th
 
 model_id = "TheBloke/Llama-2-13B-chat-GPTQ"
 
-quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
+#quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
 model = AutoModelForCausalLM.from_pretrained(
                               model_id,
                               device_map="auto",
@@ -50,7 +50,7 @@ model.gradient_checkpointing_enable()
 model = prepare_model_for_kbit_training(model)
 from peft import LoraConfig, get_peft_model
 config = LoraConfig(
-    r=32,
+    r=16,
     lora_alpha=16,
     target_modules=[
     "q_proj",
@@ -62,7 +62,7 @@ config = LoraConfig(
     "down_proj"
 ],
     lora_dropout=0.01,
-    bias="all",
+    bias="none",
     task_type="CAUSAL_LM"
 )
 
@@ -81,8 +81,7 @@ args = TrainingArguments(
     learning_rate=2e-4,
     max_grad_norm=0.3,
     warmup_ratio=0.03,
-save_Steps=200,
-    disable_tqdm=True # disable tqdm since with packing values are in correct
+# disable tqdm since with packing values are in correct
 )
 
 max_seq_length = 512 # max sequence length for model and packing of the dataset
