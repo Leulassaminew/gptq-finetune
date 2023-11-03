@@ -11,7 +11,7 @@ import torch
 from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer
 
-dataset = load_dataset("Leul78/fina")
+dataset = load_dataset("Leul78/final")
 dataset = dataset.shuffle()
 
 output_dir = "output_lora"
@@ -22,10 +22,10 @@ def format_instruction(sample):
 Categorize the input text based on the sales technique used in it from one of these categories only and offer no explanation:\n\nBUILDING RAPPORT\nNEEDS ASSESMENT\nCREATING URGENCY\nSOCIAL PROOF\nOVERCOMING OBJECTION\nCROSS SELLING OR UPSELLING\nVALUE BASED SELLING\nNONE\n\n
 
 ### Input:
-{sample['text']}
+{sample['sentence']}
 
 ### Response:
-{sample['category']}
+{sample['label']}
 """
 
 model_id = "TheBloke/Llama-2-13B-chat-GPTQ"
