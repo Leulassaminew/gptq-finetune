@@ -30,10 +30,11 @@ Categorize the input text based on the sales technique used in it from one of th
 
 model_id = "TheBloke/Llama-2-13B-chat-GPTQ"
 
-#quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
+quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
 model = AutoModelForCausalLM.from_pretrained(
                               model_id,
                               device_map="auto",
+				quantization_config=quantization_config_loading,
 			  cache_dir="./models",
 			revision="gptq-4bit-128g-actorder_True",
 				trust_remote_code=False
