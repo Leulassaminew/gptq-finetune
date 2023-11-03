@@ -34,7 +34,7 @@ model = AutoModelForCausalLM.from_pretrained(
                               device_map="auto",
 			  cache_dir="./models",
 			revision="gptq-4bit-128g-actorder_True",
-				trust_remote_code=False,
+				trust_remote_code=False
                           )
 tokenizer = AutoTokenizer.from_pretrained(model_id,cache_dir="./models")
 model.config.use_cache = False
@@ -75,6 +75,7 @@ args = TrainingArguments(
     optim="adafactor",
     logging_steps=10,
     save_strategy="epoch",
+    weight_decay=0.002,
     learning_rate=0.00005,
     max_grad_norm=0.3,
     warmup_ratio=0.03,
