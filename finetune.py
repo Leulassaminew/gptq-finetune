@@ -30,7 +30,9 @@ model_id = "TheBloke/Llama-2-13B-chat-GPTQ"
 quantization_config_loading = GPTQConfig(bits=4, disable_exllama=True)
 model = AutoModelForCausalLM.from_pretrained(
                               model_id,
-                              device_map="auto"
+                              device_map="auto",
+							  cache_dir="./models",
+							  revision=
                           )
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model.config.use_cache = False
@@ -45,10 +47,18 @@ model = prepare_model_for_kbit_training(model)
 from peft import LoraConfig, get_peft_model
 config = LoraConfig(
     r=16,
-    lora_alpha=32,
-    target_modules=["k_proj","o_proj","q_proj","v_proj"],
+    lora_alpha=16,
+    target_modules=[
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+],
     lora_dropout=0.01,
-    bias="none",
+    bias="all",
     task_type="CAUSAL_LM"
 )
 
@@ -57,13 +67,13 @@ model = get_peft_model(model, config)
 args = TrainingArguments(
     output_dir=output_dir,
     num_train_epochs=1,
-    per_device_train_batch_size=4 ,
+    per_device_train_batch_size=6 ,
     gradient_accumulation_steps=2,
     gradient_checkpointing=True,
-    optim="adamw_hf",
+    optim="adafactor",
     logging_steps=10,
     save_strategy="epoch",
-    learning_rate=2e-4,
+    learning_rate=0.00005,
     max_grad_norm=0.3,
     warmup_ratio=0.03,
     lr_scheduler_type="constant",
