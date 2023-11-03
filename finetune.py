@@ -17,8 +17,9 @@ dataset = dataset.shuffle()
 output_dir = "output_lora"
 
 def format_instruction(sample):
-	return f"""### Instruction:
-"Categorize the input text based on the sales technique used in it from one of these categories only and offer no explanation:\n\nBUILDING RAPPORT\nNEEDS ASSESMENT\nCREATING URGENCY\nSOCIAL PROOF\nOVERCOMING OBJECTION\nCROSS SELLING OR UPSELLING\nVALUE BASED SELLING\nNONE\n\n"
+	return f""" Below is an instruction give a response that appropraitely fulfils it./n
+ ### Instruction:
+Categorize the input text based on the sales technique used in it from one of these categories only and offer no explanation:\n\nBUILDING RAPPORT\nNEEDS ASSESMENT\nCREATING URGENCY\nSOCIAL PROOF\nOVERCOMING OBJECTION\nCROSS SELLING OR UPSELLING\nVALUE BASED SELLING\nNONE\n\n
 
 ### Input:
 {sample['text']}
@@ -49,7 +50,7 @@ model.gradient_checkpointing_enable()
 model = prepare_model_for_kbit_training(model)
 from peft import LoraConfig, get_peft_model
 config = LoraConfig(
-    r=16,
+    r=32,
     lora_alpha=16,
     target_modules=[
     "q_proj",
@@ -69,7 +70,7 @@ model = get_peft_model(model, config)
 
 args = TrainingArguments(
     output_dir=output_dir,
-    num_train_epochs=1,
+    num_train_epochs=2,
     per_device_train_batch_size=6 ,
     gradient_accumulation_steps=2,
     gradient_checkpointing=True,
